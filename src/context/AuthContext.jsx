@@ -15,6 +15,20 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Initialize with temporary user if no users exist
+    const existingUsers = localStorage.getItem('careerlog_users');
+    if (!existingUsers) {
+      const tempUsers = [
+        {
+          id: 'temp-user-1',
+          name: 'Demo User',
+          email: 'demo@careerlog.com',
+          password: 'password123'
+        }
+      ];
+      localStorage.setItem('careerlog_users', JSON.stringify(tempUsers));
+    }
+
     const savedUser = localStorage.getItem('careerlog_user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
