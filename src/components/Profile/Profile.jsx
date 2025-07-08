@@ -6,11 +6,21 @@ import { useData } from '../../context/DataContext';
 const Profile = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const { logs, getWeeklyLogs, getLogsWithSTAR } = useData();
+  const { logs, getWeeklyLogs, getLogsWithSTAR, clearLogs } = useData();
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  // Delete all logs handler
+  const handleDeleteAllLogs = () => {
+    if (window.confirm('Are you sure you want to delete ALL your logs? This action cannot be undone.')) {
+      clearLogs();
+      alert('All logs deleted.');
+      // Optionally, you can force a refresh or update state
+      navigate('/profile');
+    }
   };
 
   const weeklyLogs = getWeeklyLogs();
@@ -104,6 +114,9 @@ const Profile = () => {
                   <span>Recently joined</span>
                 </div>
               </div>
+              <button className="btn btn-danger" style={{marginTop: '1.5rem'}} onClick={handleDeleteAllLogs}>
+                Delete All Logs
+              </button>
             </div>
 
             <div className="activity-section">

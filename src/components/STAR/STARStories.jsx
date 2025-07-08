@@ -12,20 +12,20 @@ const STARStories = () => {
   const formatSTARStory = (log) => {
     let story = `${log.title}\n\n`;
     
-    if (log.situation) {
-      story += `Situation: ${log.situation}\n\n`;
+    if (log.star.situation) {
+      story += `Situation: ${log.star.situation}\n\n`;
     }
     
-    if (log.task) {
-      story += `Task: ${log.task}\n\n`;
+    if (log.star.task) {
+      story += `Task: ${log.star.task}\n\n`;
     }
     
-    if (log.action) {
-      story += `Action: ${log.action}\n\n`;
+    if (log.star.action) {
+      story += `Action: ${log.star.action}\n\n`;
     }
     
-    if (log.result) {
-      story += `Result: ${log.result}`;
+    if (log.star.result) {
+      story += `Result: ${log.star.result}`;
     }
     
     return story;
@@ -53,6 +53,8 @@ const STARStories = () => {
     return colors[category] || 'chip';
   };
 
+  // Remove the truncate utility and use full text
+
   return (
     <div className="star-stories">
       <Navbar />
@@ -62,13 +64,7 @@ const STARStories = () => {
           <div className="star-stories-header">
             <div className="header-content">
               <h1>STAR Stories</h1>
-              <p>Your structured stories ready for behavioral interviews</p>
-            </div>
-            <div className="header-actions">
-              <button className="btn btn-outline coming-soon-btn">
-                Generate STAR Story
-                <span className="coming-soon">Coming Soon</span>
-              </button>
+              <p>Your structured stories ready for upcoming behavioral interviews or next appraisal meetings</p>
             </div>
           </div>
 
@@ -76,7 +72,7 @@ const STARStories = () => {
             <div className="empty-state">
               <div className="empty-icon">⭐</div>
               <h3>No STAR stories yet</h3>
-              <p>Create logs with STAR format details to build your collection of behavioral interview stories.</p>
+              <p>Create logs with STAR format details to build your collection of work stories.</p>
               <Link to="/add-log" className="btn btn-primary">
                 Add Your First STAR Log
               </Link>
@@ -84,62 +80,69 @@ const STARStories = () => {
           ) : (
             <div className="star-stories-grid">
               {starLogs.map(log => (
-                <div key={log.id} className="star-story-card">
-                  <div className="story-header">
-                    <div className="story-title-section">
-                      <h3 className="story-title">{log.title}</h3>
-                      <div className="story-meta">
-                        <span className={`chip ${getCategoryColor(log.category)}`}>
-                          {log.category}
-                        </span>
-                        <span className="story-date">
-                          {new Date(log.createdAt).toLocaleDateString()}
-                        </span>
+                <div key={log.id} className="star-story-card" style={{ minHeight: '420px', maxHeight: '420px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+                  <div>
+                    <div className="story-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div className="story-title-section">
+                        <h3 className="story-title">{log.title}</h3>
+                        <div className="story-meta">
+                          <span className={`chip ${getCategoryColor(log.category)}`}>
+                            {log.category}
+                          </span>
+                          <span className="story-date">
+                            {new Date(log.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                      {/* Button group: always top right, row on mobile */}
+                      <div className="story-btn-group">
+                        <button
+                          onClick={() => copyToClipboard(log)}
+                          className={`copy-btn ${copiedId === log.id ? 'copied' : ''}`}
+                          title="Copy STAR story to clipboard"
+                          style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}
+                        >
+                          {copiedId === log.id ? (
+                            '✓ Copied'
+                          ) : (
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline', verticalAlign: 'middle' }}>
+                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                              <rect x="3" y="3" width="13" height="13" rx="2" ry="2" />
+                            </svg>
+                          )}
+                        </button>
+                        <Link to={`/log/${log.id}`} className="btn btn-sm btn-outline" style={{ marginTop: 0 }}>
+                          Open Log
+                        </Link>
                       </div>
                     </div>
-                    <button
-                      onClick={() => copyToClipboard(log)}
-                      className={`copy-btn ${copiedId === log.id ? 'copied' : ''}`}
-                      title="Copy STAR story to clipboard"
-                    >
-                      {copiedId === log.id ? '✓ Copied' : '📋 Copy'}
-                    </button>
-                  </div>
 
-                  <div className="story-content">
-                    {log.situation && (
-                      <div className="star-section">
-                        <h4>Situation</h4>
-                        <p>{log.situation}</p>
-                      </div>
-                    )}
-
-                    {log.task && (
-                      <div className="star-section">
-                        <h4>Task</h4>
-                        <p>{log.task}</p>
-                      </div>
-                    )}
-
-                    {log.action && (
-                      <div className="star-section">
-                        <h4>Action</h4>
-                        <p>{log.action}</p>
-                      </div>
-                    )}
-
-                    {log.result && (
-                      <div className="star-section">
-                        <h4>Result</h4>
-                        <p>{log.result}</p>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="story-footer">
-                    <Link to={`/log/${log.id}`} className="btn btn-sm btn-outline">
-                      View Full Log
-                    </Link>
+                    <div className="story-content" style={{ maxHeight: '260px', overflowY: 'auto', marginTop: '1rem', paddingRight: '0.5rem' }}>
+                      {log.star.situation && (
+                        <div className="star-section">
+                          <h4>SITUATION</h4>
+                          <p>{log.star.situation}</p>
+                        </div>
+                      )}
+                      {log.star.task && (
+                        <div className="star-section">
+                          <h4>TASK</h4>
+                          <p>{log.star.task}</p>
+                        </div>
+                      )}
+                      {log.star.action && (
+                        <div className="star-section">
+                          <h4>ACTION</h4>
+                          <p>{log.star.action}</p>
+                        </div>
+                      )}
+                      {log.star.result && (
+                        <div className="star-section">
+                          <h4>RESULT</h4>
+                          <p>{log.star.result}</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -325,6 +328,30 @@ const STARStories = () => {
           text-align: right;
         }
 
+        .story-btn-group {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 0.5rem;
+          min-width: 120px;
+        }
+        .story-header {
+          flex-direction: row;
+          align-items: flex-start;
+        }
+        @media (max-width: 600px) {
+          .story-header {
+            flex-direction: row;
+            align-items: flex-start;
+          }
+          .story-btn-group {
+            flex-direction: row;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0;
+            min-width: 120px;
+          }
+        }
         @media (max-width: 768px) {
           .star-stories-content {
             padding: calc(var(--spacing-unit) * 2) 0;
@@ -340,9 +367,10 @@ const STARStories = () => {
             gap: calc(var(--spacing-unit) * 3);
           }
 
+          /* Remove column direction for .story-header and .story-btn-group on mobile */
           .story-header {
-            flex-direction: column;
-            align-items: stretch;
+            flex-direction: row;
+            align-items: flex-start;
             gap: calc(var(--spacing-unit) * 2);
           }
 
