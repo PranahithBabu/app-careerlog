@@ -1,5 +1,10 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { useAuth } from './AuthContext';
+import {
+  getLogs as getStoredLogs,
+  saveLog as saveStoredLog,
+  updateLog as updateStoredLog,
+  deleteLog as deleteStoredLog
+} from '../utils/logStorage';
 
 const DataContext = createContext();
 
@@ -12,77 +17,71 @@ export const useData = () => {
 };
 
 export const DataProvider = ({ children }) => {
-  const { user } = useAuth();
   const [logs, setLogs] = useState([]);
 
+  // Load logs from localStorage on mount
   useEffect(() => {
-    if (user) {
-      const savedLogs = localStorage.getItem(`careerlog_logs_${user.id}`);
-      if (savedLogs) {
-        setLogs(JSON.parse(savedLogs));
-      }
-    } else {
-      setLogs([]);
-    }
-  }, [user]);
+    setLogs(getStoredLogs());
+  }, []);
 
-  const saveLogs = (newLogs) => {
-    if (user) {
-      localStorage.setItem(`careerlog_logs_${user.id}`, JSON.stringify(newLogs));
-      setLogs(newLogs);
-    }
-  };
-
+  // Add a new log
   const addLog = (logData) => {
     const newLog = {
       id: Date.now().toString(),
-      ...logData,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      title: logData.title,
+      description: logData.description,
+      category: logData.category,
+      tags: logData.tags || [],
+      star: logData.star || { situation: '', task: '', action: '', result: '' },
+      createdAt: new Date().toISOString()
     };
-    const updatedLogs = [newLog, ...logs];
-    saveLogs(updatedLogs);
+    saveStoredLog(newLog);
+    setLogs(getStoredLogs());
     return newLog.id;
   };
 
+  // Update an existing log
   const updateLog = (id, logData) => {
-    const updatedLogs = logs.map(log => 
-      log.id === id 
-        ? { ...log, ...logData, updatedAt: new Date().toISOString() }
-        : log
-    );
-    saveLogs(updatedLogs);
+    updateStoredLog(id, logData);
+    setLogs(getStoredLogs());
   };
 
+  // Delete a log
   const deleteLog = (id) => {
-    const updatedLogs = logs.filter(log => log.id !== id);
-    saveLogs(updatedLogs);
+    deleteStoredLog(id);
+    setLogs(getStoredLogs());
   };
 
+  // Get a single log by id
   const getLog = (id) => {
     return logs.find(log => log.id === id);
   };
 
+  // Get logs with STAR fields populated
   const getLogsWithSTAR = () => {
-    return logs.filter(log => 
-      log.situation || log.task || log.action || log.result
+    return logs.filter(log =>
+      log.star && (log.star.situation || log.star.task || log.star.action || log.star.result)
     );
   };
 
+  // Filter logs by category
   const getLogsByCategory = (category) => {
     return logs.filter(log => log.category === category);
   };
 
+  // Filter logs by tag
   const getLogsByTag = (tag) => {
     return logs.filter(log => log.tags && log.tags.includes(tag));
   };
 
+  // Get logs from the last 7 days
   const getWeeklyLogs = () => {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     return logs.filter(log => new Date(log.createdAt) >= oneWeekAgo);
   };
 
+  // Get the most used tag
   const getTopTag = () => {
     const tagCounts = {};
     logs.forEach(log => {
@@ -92,11 +91,9 @@ export const DataProvider = ({ children }) => {
         });
       }
     });
-    
-    const topTag = Object.keys(tagCounts).reduce((a, b) => 
+    const topTag = Object.keys(tagCounts).reduce((a, b) =>
       tagCounts[a] > tagCounts[b] ? a : b, null
     );
-    
     return topTag;
   };
 
