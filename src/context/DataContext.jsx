@@ -3,7 +3,8 @@ import {
   getLogs as getStoredLogs,
   saveLog as saveStoredLog,
   updateLog as updateStoredLog,
-  deleteLog as deleteStoredLog
+  deleteLog as deleteStoredLog,
+  clearLogs as clearStoredLogs
 } from '../utils/logStorage';
 
 const DataContext = createContext();
@@ -50,6 +51,12 @@ export const DataProvider = ({ children }) => {
   const deleteLog = (id) => {
     deleteStoredLog(id);
     setLogs(getStoredLogs());
+  };
+
+  // Clear all logs
+  const clearAllLogs = () => {
+    clearStoredLogs();
+    setLogs([]);
   };
 
   // Get a single log by id
@@ -107,7 +114,8 @@ export const DataProvider = ({ children }) => {
     getLogsByCategory,
     getLogsByTag,
     getWeeklyLogs,
-    getTopTag
+    getTopTag,
+    clearLogs: clearAllLogs
   };
 
   return (
