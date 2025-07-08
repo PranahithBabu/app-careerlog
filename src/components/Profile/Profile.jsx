@@ -50,6 +50,9 @@ const Profile = () => {
               </div>
 
               <div className="profile-actions">
+                <button className="btn btn-warning" style={{marginTop: '1.5rem', marginRight: '1rem'}} onClick={handleDeleteAllLogs}>
+                  Delete All Logs
+                </button>
                 <button onClick={handleLogout} className="btn btn-danger">
                   Logout
                 </button>
@@ -94,7 +97,7 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="account-section">
+            {/* <div className="account-section">
               <h3>Account Information</h3>
               <div className="account-details">
                 <div className="detail-item">
@@ -105,19 +108,11 @@ const Profile = () => {
                   <label>Email Address</label>
                   <span>{user?.email}</span>
                 </div>
-                <div className="detail-item">
-                  <label>Account Type</label>
-                  <span>Individual</span>
-                </div>
-                <div className="detail-item">
-                  <label>Member Since</label>
-                  <span>Recently joined</span>
-                </div>
               </div>
               <button className="btn btn-danger" style={{marginTop: '1.5rem'}} onClick={handleDeleteAllLogs}>
                 Delete All Logs
               </button>
-            </div>
+            </div> */}
 
             <div className="activity-section">
               <h3>Recent Activity</h3>
@@ -130,19 +125,33 @@ const Profile = () => {
                   <div className="activity-item">
                     <div className="activity-icon">✏️</div>
                     <div className="activity-content">
-                      <p>Latest log: <strong>{logs[0]?.title}</strong></p>
-                      <span>{new Date(logs[0]?.createdAt).toLocaleDateString()}</span>
+                      <p>Latest log: <strong>{logs[logs.length - 1]?.title}</strong></p>
+                      <span>{new Date(logs[logs.length - 1]?.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
-                  {logs.length > 1 && (
-                    <div className="activity-item">
-                      <div className="activity-icon">📈</div>
-                      <div className="activity-content">
-                        <p>You've been consistent with logging your work</p>
-                        <span>Keep up the great work!</span>
+                  
+                  {/* Show consistency message if logs exist and latest log is less than 2 days old, else show the no activity message */}
+                  {logs.length > 0 && 
+                  // ? (
+                    (new Date(logs[logs.length - 1]?.createdAt) > new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)) ? (
+                      <div className="activity-item">
+                        <div className="activity-icon">📈</div>
+                        <div className="activity-content">
+                          <p>You've been consistent with logging your work</p>
+                          <span>Keep up the great work!</span>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    ) : (
+                      <div className="activity-item">
+                        <div className="activity-icon">📅</div>
+                        <div className="activity-content">
+                          <p>No activity in the last few days</p>
+                          <span>Start logging your work highlights!</span>
+                        </div>
+                      </div>
+                    )
+                  // ) : null
+                  }
                 </div>
               )}
             </div>

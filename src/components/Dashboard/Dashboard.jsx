@@ -7,7 +7,7 @@ const Dashboard = () => {
   
   const weeklyLogs = getWeeklyLogs();
   const topTag = getTopTag();
-  const recentLogs = logs.slice(0, 5);
+  // const recentLogs = logs.slice(0, 5);
 
   const getCategoryColor = (category) => {
     const colors = {
@@ -65,12 +65,12 @@ const Dashboard = () => {
           </div>
 
           <div className="recent-logs">
-            <div className="section-header">
+            {/* <div className="section-header">
               <h2>Recent Logs</h2>
               {logs.length > 5 && (
                 <Link to="/logs" className="view-all-link">View All</Link>
               )}
-            </div>
+            </div> */}
 
             {logs.length === 0 ? (
               <div className="empty-state">
@@ -83,7 +83,7 @@ const Dashboard = () => {
               </div>
             ) : (
               <div className="logs-grid">
-                {recentLogs.map(log => (
+                {logs.map(log => (
                   <div key={log.id} className="log-card">
                     <div className="log-card-header">
                       <h3 className="log-title">{log.title}</h3>
