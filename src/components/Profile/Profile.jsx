@@ -18,7 +18,6 @@ const Profile = () => {
     if (window.confirm('Are you sure you want to delete ALL your logs? This action cannot be undone.')) {
       clearLogs();
       alert('All logs deleted.');
-      // Optionally, you can force a refresh or update state
       navigate('/profile');
     }
   };
@@ -97,23 +96,6 @@ const Profile = () => {
               </div>
             </div>
 
-            {/* <div className="account-section">
-              <h3>Account Information</h3>
-              <div className="account-details">
-                <div className="detail-item">
-                  <label>Full Name</label>
-                  <span>{user?.name}</span>
-                </div>
-                <div className="detail-item">
-                  <label>Email Address</label>
-                  <span>{user?.email}</span>
-                </div>
-              </div>
-              <button className="btn btn-danger" style={{marginTop: '1.5rem'}} onClick={handleDeleteAllLogs}>
-                Delete All Logs
-              </button>
-            </div> */}
-
             <div className="activity-section">
               <h3>Recent Activity</h3>
               {logs.length === 0 ? (
@@ -129,11 +111,7 @@ const Profile = () => {
                       <span>{new Date(logs[logs.length - 1]?.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
-                  
-                  {/* Show consistency message if logs exist and latest log is less than 2 days old, else show the no activity message */}
-                  {logs.length > 0 && 
-                  // ? (
-                    (new Date(logs[logs.length - 1]?.createdAt) > new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)) ? (
+                  {(new Date(logs[logs.length - 1]?.createdAt) > new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)) ? (
                       <div className="activity-item">
                         <div className="activity-icon">📈</div>
                         <div className="activity-content">
@@ -149,9 +127,7 @@ const Profile = () => {
                           <span>Start logging your work highlights!</span>
                         </div>
                       </div>
-                    )
-                  // ) : null
-                  }
+                    )}
                 </div>
               )}
             </div>
