@@ -1,16 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   // Close menu on navigation
   const handleNav = (path) => {
@@ -22,21 +15,16 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/dashboard" className="navbar-brand">
-          <h2>CareerLog</h2>
+          <h2 style={{ color: '#6366f1' }}>CareerLog</h2>
         </Link>
         {/* Desktop menu */}
         <div className="navbar-menu">
           <Link to="/star-stories" className="navbar-link">
             STAR Stories
           </Link>
-          <div className="navbar-profile">
-            <button className="profile-button" onClick={() => navigate('/profile')}>
-              <div className="profile-avatar">
-                {user?.name?.charAt(0).toUpperCase() || 'U'}
-              </div>
-              <span className="profile-name">{user?.name}</span>
-            </button>
-          </div>
+          <Link to="/profile" className="navbar-link">
+            Profile
+          </Link>
         </div>
         {/* Hamburger for mobile */}
         <button
@@ -54,17 +42,15 @@ const Navbar = () => {
         {/* Mobile menu dropdown */}
         {mobileMenuOpen && (
           <div className="mobile-menu-overlay" onClick={() => setMobileMenuOpen(false)}>
-            <div className="mobile-menu" onClick={e => e.stopPropagation()}>
+            <div className="mobile-menu" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <button className="mobile-menu-link" onClick={() => handleNav('/star-stories')}>
-                <div className="star-menu" style={{ marginRight: 8 }}>
-                  ⭐
-                </div>
+                <span style={{ marginRight: 8, fontSize: '1.2em', verticalAlign: 'middle' }}>⭐</span>
                 Stories
               </button>
-              <button className="mobile-menu-link" onClick={() => handleNav('/profile')}>
-                <div className="profile-avatar" style={{ marginRight: 8 }}>
-                  {user?.name?.charAt(0).toUpperCase() || 'U'}
-                </div>
+              <button className="mobile-menu-link" onClick={() => handleNav('/profile')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ display: 'flex', alignItems: 'center', fontSize: '1.25em', marginRight: 8 }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{display:'block'}}><circle cx="12" cy="8" r="4"/><path d="M4 20c0-2.5 3.5-4 8-4s8 1.5 8 4"/></svg>
+                </span>
                 Profile
               </button>
             </div>
