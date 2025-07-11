@@ -1,17 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Common/Navbar';
-import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
   const { logs, getWeeklyLogs, getLogsWithSTAR, clearLogs } = useData();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   // Delete all logs handler
   const handleDeleteAllLogs = () => {
@@ -33,31 +26,10 @@ const Profile = () => {
         <div className="container">
           <div className="profile-header">
             <h1>Profile</h1>
-            <p>Manage your account and view your progress</p>
+            <p>Manage your logs and view your progress</p>
           </div>
 
           <div className="profile-layout">
-            <div className="profile-card">
-              <div className="profile-avatar-section">
-                <div className="profile-avatar-large">
-                  {user?.name?.charAt(0).toUpperCase() || 'U'}
-                </div>
-                <div className="profile-info">
-                  <h2>{user?.name}</h2>
-                  <p>{user?.email}</p>
-                </div>
-              </div>
-
-              <div className="profile-actions">
-                <button className="btn btn-warning" style={{marginTop: '1.5rem', marginRight: '1rem'}} onClick={handleDeleteAllLogs}>
-                  Delete All Logs
-                </button>
-                <button onClick={handleLogout} className="btn btn-danger">
-                  Logout
-                </button>
-              </div>
-            </div>
-
             <div className="stats-grid">
               <div className="stat-card">
                 <div className="stat-icon">📊</div>
@@ -97,7 +69,14 @@ const Profile = () => {
             </div>
 
             <div className="activity-section">
-              <h3>Recent Activity</h3>
+              <div className="activity-header">
+                <h3>Recent Activity</h3>
+                {logs.length !==0 ? (
+                  <button className="btn btn-danger" onClick={handleDeleteAllLogs}>
+                    Delete All Logs
+                  </button>
+                ) : null}
+              </div>
               {logs.length === 0 ? (
                 <div className="no-activity">
                   <p>No logs created yet. Start tracking your work highlights!</p>
@@ -207,8 +186,7 @@ const Profile = () => {
         }
 
         .profile-actions {
-          padding: calc(var(--spacing-unit) * 3);
-          border-top: 1px solid var(--border-light);
+          padding: 0;
           text-align: right;
         }
 
@@ -262,12 +240,12 @@ const Profile = () => {
           border-radius: var(--border-radius-lg);
           box-shadow: var(--shadow-sm);
           border: 1px solid var(--border-light);
-          padding: calc(var(--spacing-unit) * 4);
+          padding: calc(var(--spacing-unit) * 2.2) calc(var(--spacing-unit) * 4);
         }
 
         .account-section h3,
         .activity-section h3 {
-          margin-bottom: calc(var(--spacing-unit) * 3);
+          margin-bottom: 0;
           color: var(--text-primary);
         }
 
@@ -329,6 +307,13 @@ const Profile = () => {
         .activity-content span {
           color: var(--text-light);
           font-size: 0.875rem;
+        }
+
+        .activity-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: calc(var(--spacing-unit) * 1.2);
         }
 
         @media (max-width: 768px) {
