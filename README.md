@@ -1,8 +1,23 @@
-# React + Vite
+# 📝 CareerLog
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+CareerLog is a **personal productivity and career growth tracking application** that enables software engineers and knowledge workers to:
 
-Currently, two official plugins are available:
+✅ Log daily work highlights efficiently  
+✅ Organise logs with categories and tags  
+✅ Generate STAR stories for behavioral interviews and performance reviews using AI
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
+
+## 🚀 **Project Overview**
+
+🎯 **Objective:**  
+Help users build a structured work log that captures their achievements, learnings, and tasks, and converts them into STAR (Situation, Task, Action, Result) stories to showcase impact during interviews and appraisals.
+
+💡 **Key Features:**
+- Add logs with title, description, category, and tags
+- Generate STAR structured responses using AI based on log description
+- Store logs locally on the user’s device (no backend required for MVP)
+- Copy STAR stories for easy use in interviews
+- Clean, responsive React.js frontend
+
+---
